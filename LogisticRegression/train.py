@@ -4,7 +4,7 @@ import math
 import matplotlib.pyplot as plt
 loss_plot = []
 epochs_plot = []
-class SigmoidModel:
+class LogisticRegression:
     def __init__(self,weights=[],bias=0):
         self.weights = weights
         self.bias = bias
@@ -65,7 +65,7 @@ data = {
 df = pd.DataFrame(data=data)
 X = df.iloc[:,0:2]
 y = df.iloc[:, 2]
-my_model = SigmoidModel()
+my_model = LogisticRegression()
 my_model.fit(X=X, y=y, epochs=1000, learning_rate=60)
 plt.plot(epochs_plot,loss_plot)
 plt.show()

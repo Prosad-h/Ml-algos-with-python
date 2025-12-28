@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import math
 import matplotlib.pyplot as plt
+from drawdata import draw_line
 loss_plot = []
 epochs_plot = []
 
@@ -33,24 +34,34 @@ class LinearRegressionModel:
             loss_plot.append(_loss)
        
     def predict(self,input):
-                product_w = self.weights * input
-                return product_w.sum() + self.bias
+                if isinstance(input, list) or isinstance(input,pd.Series):
+                    product_w = self.weights * input
+                    return product_w.sum() + self.bias
+                else:
+                    total_results = []
+                    for row in range(0,input.shape[0]):
+                        product_w = self.weights * input.iloc[row]
+                        total_results.append(product_w.sum() + self.bias)
+                    return pd.Series(total_results)
     def gradient_descent(self,predictions,input,output,learning_rate):
          n = len(predictions)
          
          _loss = 0
          for i in range(0,self.col_amount):
-            series_of_loss = predictions - output
-            _loss = series_of_loss**2
+            series_of_difference = predictions - output
+            _loss = series_of_difference**2
             
             _loss = _loss.sum()
             _loss = _loss/n
            
-            series_of_derivatives = series_of_loss*input.iloc[:,i]
+            series_of_derivatives = series_of_difference*input.iloc[:,i]
             total_loss = (series_of_derivatives.sum()*2)/n
             step = total_loss*learning_rate
             new_weight = self.weights[i] - step
             self.weights[i] = new_weight
+         total_gradient_bias = (series_of_difference.sum())/n
+         step = total_gradient_bias*learning_rate
+         self.bias = self.bias - step
          return _loss
     def save(self):
          print("To save please note the returned values, and when creating a new linear regression object plug these values in as parameters, also pass the weights as a numpy array and if you want fit with your own params you can set useNewParams to False")
@@ -66,8 +77,14 @@ X_test = df_test.iloc[:,0:-1]
 y_test = df_test.iloc[:,-1]
 my_model = LinearRegressionModel()
 my_model.fit(y=y_train,X=X_train, learning_rate=0.00001)
-prediction = my_model.predict(X_test.iloc[4])
-print("Prediction:",prediction,"Actual Value:",y_test.iloc[4])
-my_model.save()
+prediction = my_model.predict(X_test)
+mse = prediction - y_test.reset_index(drop=True)
+
+mse = np.abs(mse)
+print("Predictions:", prediction)
+print("True value:",y_test)
+print("Mean Error:", mse.mean())
+
+
 plt.plot(epochs_plot,loss_plot)
 plt.show()
