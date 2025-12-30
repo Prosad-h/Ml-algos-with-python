@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import math
 import matplotlib.pyplot as plt
-from drawdata import draw_line
+import drawdata
 loss_plot = []
 epochs_plot = []
 
@@ -67,7 +67,9 @@ class LinearRegressionModel:
          print("To save please note the returned values, and when creating a new linear regression object plug these values in as parameters, also pass the weights as a numpy array and if you want fit with your own params you can set useNewParams to False")
          print("weights: ",self.weights,"bias",self.bias)
          return {"weights":self.weights,"bias":self.bias}
-        
+
+df2 =  drawdata.ScatterWidget()
+df2
 df = pd.read_csv("/winequality-red.csv")
 df_train = df.iloc[0:math.floor(df.shape[0]*0.8)]
 df_test = df.iloc[math.floor(df.shape[0]*0.8):-1]
