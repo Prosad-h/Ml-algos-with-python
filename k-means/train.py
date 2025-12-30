@@ -59,7 +59,7 @@ df = df.drop(columns=["color","label","batch"])
 
 
 model = Kmeans()
-clusters=model.fit(5,df,epochs=5)
+clusters=model.fit(2,df,epochs=5)
 
 colors =["#0000FF", "#FF0000"]
 all_clusters_df = None
@@ -75,7 +75,9 @@ for i,cluster in enumerate(clusters):
 
 
 plt.figure(1)
-plt.scatter(all_clusters_df["1"], all_clusters_df["2"], c=all_clusters_df["color"])
-plt.figure(2)
 plt.scatter(all_clusters_df["1"], all_clusters_df["2"])
+plt.title("Original Data")
+plt.figure(2)
+plt.scatter(all_clusters_df["1"], all_clusters_df["2"], c=all_clusters_df["color"])
+plt.title("Grouped Data")
 plt.show()
